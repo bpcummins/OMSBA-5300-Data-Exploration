@@ -5,7 +5,6 @@ library(vtable)
 library(estimatr)
 library(lubridate)
 
-
 file_names <- list.files(path = 'Data/', pattern = 'trends_up_to', full.names = TRUE)
 
 #read in google trends data
@@ -44,3 +43,14 @@ id_and_trends <- inner_join(id_name, trend_df, by='schname')
 
 # join scorecard to id/trends
 clean_df <- inner_join(id_and_trends, scorecard, by=c('unitid' = 'UNITID'))
+
+#filter full data set
+clean_df <- clean_df %>%
+  filter(`md_earn_wne_p10-REPORTED-EARNINGS` != 'NULL') %>%
+  filter(`md_earn_wne_p10-REPORTED-EARNINGS` != 'PrivacySuppressed') %>% 
+  mutate(earnings = as.numeric(`md_earn_wne_p10-REPORTED-EARNINGS`))
+
+#create dummy variable for before or after scorecard
+clean_df$post_scorecard <- ifelse(clean_df$monthorweek >= '2015-9-1', 1, 0)
+
+
