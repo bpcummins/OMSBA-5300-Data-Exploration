@@ -55,3 +55,8 @@ clean_df$post_scorecard <- ifelse(clean_df$monthorweek >= '2015-9-1', 1, 0)
 
 median(clean_df$earnings, na.rm=TRUE) # 37800
 clean_df$high_earner <- ifelse(clean_df$earnings >= 37800, 1, 0)
+
+#filter to only be bach degrees
+final_df_clean <- final_df %>% 
+  filter(PREDDEG == 3)  
+
