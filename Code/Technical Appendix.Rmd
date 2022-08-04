@@ -20,6 +20,13 @@ library(lubridate)
 library(Ecdat)
 library(purrr)
 library(corrplot)
+library(gridExtra)
+library(janitor)
+library(knitr)
+library(GGally)
+library(scales)
+library(patchwork)
+library(DataExplorer)
 ```
 
 ```{r}
@@ -46,27 +53,23 @@ sumtable(clean_df)
 ## Quantitative Variables
 ```{r}
 
-hist1 <- ggplot(data = clean_df, mapping = aes(x = )) + 
+hist1 <- ggplot(data = clean_df, mapping = aes(x= index)) + 
   geom_histogram() 
 
-hist2 <- ggplot(data = clean_df, mapping = aes(x = )) + 
+hist2 <- ggplot(data = clean_df, mapping = aes(x = earnings)) + 
   geom_histogram()
 
-hist3 <- ggplot(data = clean_df, mapping = aes(x = )) + 
+hist3 <- ggplot(data = clean_df, mapping = aes(x= ACTCMMID)) + 
+  geom_histogram() 
+
+hist4 <- ggplot(data = clean_df, mapping = aes(x = SAT_AVG)) + 
   geom_histogram()
 
-hist4 <- ggplot(data = clean_df, mapping = aes(x = )) + 
-  geom_histogram(binwidth = 1)
+```
 
-hist5 <- ggplot(data = clean_df, mapping = aes(x = )) + 
-  geom_histogram(binwidth = 1)
-
-hist6 <- ggplot(data = clean_df, mapping = aes(x = )) + 
-  geom_histogram(binwidth = 1)
-
-(hist1 + hist2) /
-  (hist3 + hist4) /
-  (hist5 + hist6)
+```{r}
+(hist1 + hist2) / 
+  (hist3 + hist4)
 ```
 
 
@@ -79,36 +82,31 @@ hist6 <- ggplot(data = clean_df, mapping = aes(x = )) +
 
 ```{r}
 
-bar1 <- ggplot(data = clean_df, mapping = aes(x = )) +
-  geom_bar() +
-  coord_flip()
+bar1 <- ggplot(data = clean_df, mapping = aes(x = post_scorecard)) +
+  geom_bar() 
 
-bar2 <- ggplot(data = clean_df, mapping = aes(x = )) +
-  geom_bar()+
-  coord_flip()
+bar2 <- ggplot(data = clean_df, mapping = aes(x = high_earner)) +
+  geom_bar()
 
-bar3 <- ggplot(data = clean_df, mapping = aes(x = )) +
-  geom_bar()+
-  coord_flip()
+bar3 <- ggplot(data = clean_df, mapping = aes(x = PBI)) +
+  geom_bar()
 
-bar4 <- ggplot(data = clean_df, mapping = aes(x = )) +
-  geom_bar()+
-  coord_flip()
+bar4 <- ggplot(data = clean_df, mapping = aes(x = HSI)) +
+  geom_bar()
 
-bar5 <- ggplot(data = clean_df, mapping = aes(x = )) +
-  geom_bar()+
-  coord_flip()
+bar5 <- ggplot(data = clean_df, mapping = aes(x = MENONLY)) +
+  geom_bar()
 
-bar6 <- ggplot(data = clean_df, mapping = aes(x = )) +
-  geom_bar()+
-  coord_flip()
+bar6 <- ggplot(data = clean_df, mapping = aes(x = WOMENONLY)) +
+  geom_bar()
+```
 
+
+```{r}
 (bar1 + bar2) / 
   (bar3 + bar4) /
   (bar5 + bar6)
-
 ```
-
 
 **Comments**
 
@@ -121,7 +119,7 @@ bar6 <- ggplot(data = clean_df, mapping = aes(x = )) +
 
 ```{r message=FALSE, warning=FALSE}
 clean_df %>% 
-  subset(select = c()) %>% 
+  subset(select = c(index, earnings, post_scorecard, high_earner, PBI, HSI, MENONLY, WOMENONLY, ACTCMMID, SAT_AVG)) %>% 
   na.omit() %>% 
   plot_correlation()
 ```
@@ -129,7 +127,7 @@ clean_df %>%
 
 ```{r message=FALSE, warning=FALSE}
 clean_df %>% 
-  subset(select = c()) %>% 
+  subset(select = c(index, earnings, post_scorecard, high_earner, PBI, HSI, MENONLY, WOMENONLY, ACTCMMID, SAT_AVG)) %>% 
   na.omit() %>% 
   ggpairs()
 ```
