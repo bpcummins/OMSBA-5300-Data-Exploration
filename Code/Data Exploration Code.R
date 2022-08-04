@@ -53,4 +53,5 @@ clean_df <- clean_df %>%
 #create dummy variable for before or after scorecard
 clean_df$post_scorecard <- ifelse(clean_df$monthorweek >= '2015-9-1', 1, 0)
 
-
+median(clean_df$earnings, na.rm=TRUE) # 37800
+clean_df$high_earner <- ifelse(clean_df$earnings >= 37800, 1, 0)
