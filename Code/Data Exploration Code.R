@@ -5,6 +5,7 @@ library(vtable)
 library(estimatr)
 library(lubridate)
 
+
 file_names <- list.files(path = 'Data/', pattern = 'trends_up_to', full.names = TRUE)
 
 #read in google trends data
@@ -12,8 +13,8 @@ trend_df <- file_names %>%
   map_df(read_csv)
 
 #date format and months aggregation
-trend_df %>% trend_df %>%  
-  mutate(monthorweek = str_sub(monthorweek,1,10)) 
+trend_df <- trend_df %>%  
+  mutate(monthorweek = str_sub(monthorweek,1,10))
 
 trend_df$monthorweek <- trend_df$monthorweek %>% 
   ymd() %>% 
