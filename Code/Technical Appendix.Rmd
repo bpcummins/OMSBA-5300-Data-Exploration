@@ -1,0 +1,218 @@
+---
+title: "DEA Analysis"
+author: "Brooke Cummins"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r, include = FALSE}
+library(tidyverse)
+library(fixest)
+library(purrr)
+library(vtable)
+library(estimatr)
+library(lubridate)
+library(Ecdat)
+library(purrr)
+library(corrplot)
+```
+
+```{r}
+source("Code/Data Exploration Code.R")
+```
+
+```{r}
+# Check descriptive stats of the data
+sumtable(clean_df)
+```
+
+
+***Comments***
+
++ There are a lot of variables in this data set so I'll only go over the ones of interest I'll be focusing on in this analysis
+
+    - asasdfasdfa
+    - asasdfasdfa
+
+
+
+# Base EDA Step 2: Uni-variate graphical EDA
+
+## Quantitative Variables
+```{r}
+
+hist1 <- ggplot(data = clean_df, mapping = aes(x = )) + 
+  geom_histogram() 
+
+hist2 <- ggplot(data = clean_df, mapping = aes(x = )) + 
+  geom_histogram()
+
+hist3 <- ggplot(data = clean_df, mapping = aes(x = )) + 
+  geom_histogram()
+
+hist4 <- ggplot(data = clean_df, mapping = aes(x = )) + 
+  geom_histogram(binwidth = 1)
+
+hist5 <- ggplot(data = clean_df, mapping = aes(x = )) + 
+  geom_histogram(binwidth = 1)
+
+hist6 <- ggplot(data = clean_df, mapping = aes(x = )) + 
+  geom_histogram(binwidth = 1)
+
+(hist1 + hist2) /
+  (hist3 + hist4) /
+  (hist5 + hist6)
+```
+
+
+**Comments**
+
+  + asdfasdf
+  + asdfasdf 
+
+## Categorical Variables
+
+```{r}
+
+bar1 <- ggplot(data = clean_df, mapping = aes(x = )) +
+  geom_bar() +
+  coord_flip()
+
+bar2 <- ggplot(data = clean_df, mapping = aes(x = )) +
+  geom_bar()+
+  coord_flip()
+
+bar3 <- ggplot(data = clean_df, mapping = aes(x = )) +
+  geom_bar()+
+  coord_flip()
+
+bar4 <- ggplot(data = clean_df, mapping = aes(x = )) +
+  geom_bar()+
+  coord_flip()
+
+bar5 <- ggplot(data = clean_df, mapping = aes(x = )) +
+  geom_bar()+
+  coord_flip()
+
+bar6 <- ggplot(data = clean_df, mapping = aes(x = )) +
+  geom_bar()+
+  coord_flip()
+
+(bar1 + bar2) / 
+  (bar3 + bar4) /
+  (bar5 + bar6)
+
+```
+
+
+**Comments**
+
+  + asdfasdf
+  + asdfasdf 
+
+
+
+# Base EDA Step 3 & 4: Multi-variate non-graphical, multi-variate graphical
+
+```{r message=FALSE, warning=FALSE}
+clean_df %>% 
+  subset(select = c()) %>% 
+  na.omit() %>% 
+  plot_correlation()
+```
+
+
+```{r message=FALSE, warning=FALSE}
+clean_df %>% 
+  subset(select = c()) %>% 
+  na.omit() %>% 
+  ggpairs()
+```
+
+
+**Comments**
+
+  + asdfasdf
+  + asdfasdf 
+
+
+
+# Detailed EDA - questions raised in Base EDA
+## Question 1
+
+  + comment
+
+```{r message=FALSE, warning=FALSE}
+
+```
+
+
+**Comments**
+
+  + asdfasdf
+  + asdfasdf 
+
+
+
+## Question 2
+
+  + comment
+
+```{r message=FALSE, warning=FALSE}
+
+```
+
+
+**Comments**
+
+  + asdfasdf
+  + asdfasdf 
+
+
+
+# Modeling
+## Model 1
+
+```{r}
+
+```
+
+***Comment***
+
+  + We can say with % confidence that 
+
+
+
+
+## Model 2
+
+```{r}
+
+```
+
+***Comment***
+
+  + We can say with % confidence that 
+
+
+
+# Summary of Findings
+
+  + asdfasdf
+  + asdfasdf 
+
+
+
+# Create any visuals needed for write up
+```{r}
+
+``` 
+
+
+
+
