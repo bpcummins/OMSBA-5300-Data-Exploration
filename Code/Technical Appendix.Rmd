@@ -30,7 +30,7 @@ library(DataExplorer)
 ```
 
 ```{r}
-source("Code/Data Exploration Code.R")
+source("../Code/Data Exploration Code.R")
 ```
 
 ```{r}
@@ -141,35 +141,56 @@ clean_df %>%
 
 
 # Detailed EDA - questions raised in Base EDA
-## Question 1
+## Index and earnings
 
-  + comment
 
 ```{r message=FALSE, warning=FALSE}
+
+ggplot(clean_df, aes(x = earnings, y = index)) + geom_point() 
+
 
 ```
 
 
 **Comments**
 
-  + asdfasdf
-  + asdfasdf 
+  + Hard to not immediately point out the shape of this beauty...
 
 
+## Index values before and after scorecard
 
-## Question 2
-
-  + comment
 
 ```{r message=FALSE, warning=FALSE}
+
+clean_df %>% group_by(post_scorecard) %>% 
+  summarise(avg_index = mean(index, na.rm = TRUE)) %>% 
+  ggplot(mapping = aes(x = post_scorecard, y = avg_index)) +
+  geom_col() 
 
 ```
 
 
 **Comments**
 
-  + asdfasdf
-  + asdfasdf 
+  + Index scores went down after the scorecard was created so we need to control for it
+
+
+## Earnings and Index with SAT
+
+
+```{r message=FALSE, warning=FALSE}
+earn_sat <- ggplot(clean_df, aes(x = SAT_AVG, y = earnings)) + geom_point() 
+
+index_sat <- ggplot(clean_df, aes(x = SAT_AVG, y = index)) + geom_point() 
+
+
+(earn_sat + index_sat)
+```
+
+
+**Comments**
+
+  + SAT and earnings is super interesting!
 
 
 
@@ -178,25 +199,49 @@ clean_df %>%
 
 ```{r}
 
+mod_1 <- feols(index ~ post_scorecard + earnings + SAT_AVG + monthorweek,data = clean_df)
+etable(mod_1)
+
 ```
 
 ***Comment***
 
-  + We can say with % confidence that 
-
-
+  + We probably want an interaction term with scorecard and earnings but I wanted to get a base read
 
 
 ## Model 2
 
 ```{r}
 
+mod_2 <- feols(index ~ post_scorecard + earnings + I(post_scorecard*earnings) + SAT_AVG + monthorweek,data = clean_df)
+etable(mod_2)
+
 ```
 
 ***Comment***
 
-  + We can say with % confidence that 
+  + I really like this model but lets see if SAT is helping us
 
+
+```{r}
+wald(mod_2, 'SAT_AVG')
+```
+
+  + let's try without it!
+
+
+## Model 3
+
+```{r}
+
+mod_3 <- feols(index ~ post_scorecard + earnings + I(post_scorecard*earnings) + monthorweek,data = clean_df)
+etable(mod_3)
+
+```
+
+***Comment***
+
+  + We have our model!
 
 
 # Summary of Findings
