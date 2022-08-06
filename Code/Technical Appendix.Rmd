@@ -108,6 +108,28 @@ bar6 <- ggplot(data = clean_df, mapping = aes(x = WOMENONLY)) +
   (bar5 + bar6)
 ```
 
+
+
+```{r}
+
+bar7 <- ggplot(data = clean_df, mapping = aes(x = low_income)) +
+  geom_bar() 
+
+bar8 <- ggplot(data = clean_df, mapping = aes(x = mid_income)) +
+  geom_bar()
+
+bar9 <- ggplot(data = clean_df, mapping = aes(x = high_income)) +
+  geom_bar()
+
+```
+
+
+```{r}
+(bar7 + bar8) / 
+  bar9
+```
+
+
 **Comments**
 
   + asdfasdf
@@ -119,7 +141,8 @@ bar6 <- ggplot(data = clean_df, mapping = aes(x = WOMENONLY)) +
 
 ```{r message=FALSE, warning=FALSE}
 clean_df %>% 
-  subset(select = c(index, earnings, post_scorecard, high_earner, PBI, HSI, MENONLY, WOMENONLY, ACTCMMID, SAT_AVG)) %>% 
+  subset(select = c(index, earnings, post_scorecard, high_earner, PBI, HSI, 
+                    MENONLY, WOMENONLY, ACTCMMID, SAT_AVG, low_income, mid_income, high_income)) %>% 
   na.omit() %>% 
   plot_correlation()
 ```
@@ -127,7 +150,8 @@ clean_df %>%
 
 ```{r message=FALSE, warning=FALSE}
 clean_df %>% 
-  subset(select = c(index, earnings, post_scorecard, high_earner, PBI, HSI, MENONLY, WOMENONLY, ACTCMMID, SAT_AVG)) %>% 
+  subset(select = c(index, earnings, post_scorecard, high_earner, PBI, HSI, 
+                    MENONLY, WOMENONLY, ACTCMMID, SAT_AVG, low_income, mid_income, high_income)) %>% 
   na.omit() %>% 
   ggpairs()
 ```
@@ -179,7 +203,7 @@ clean_df %>% group_by(post_scorecard) %>%
 
 
 ```{r message=FALSE, warning=FALSE}
-earn_sat <- ggplot(clean_df, aes(x = SAT_AVG, y = earnings)) + geom_point() 
+earn_sat <- ggplot(clean_df, aes(x = SAT_AVG, y = high_earner)) + geom_point() 
 
 index_sat <- ggplot(clean_df, aes(x = SAT_AVG, y = index)) + geom_point() 
 
@@ -190,8 +214,7 @@ index_sat <- ggplot(clean_df, aes(x = SAT_AVG, y = index)) + geom_point()
 
 **Comments**
 
-  + SAT and earnings is super interesting!
-
+  + asdfasdf asdf 
 
 
 # Modeling
@@ -199,21 +222,21 @@ index_sat <- ggplot(clean_df, aes(x = SAT_AVG, y = index)) + geom_point()
 
 ```{r}
 
-mod_1 <- feols(index ~ post_scorecard + earnings + SAT_AVG + monthorweek,data = clean_df)
+mod_1 <- feols(index ~ post_scorecard + high_earner + SAT_AVG + monthorweek,data = clean_df)
 etable(mod_1)
 
 ```
 
 ***Comment***
 
-  + We probably want an interaction term with scorecard and earnings but I wanted to get a base read
+  + We probably want an interaction term with scorecard and high_earner but I wanted to get a base read
 
 
 ## Model 2
 
 ```{r}
 
-mod_2 <- feols(index ~ post_scorecard + earnings + I(post_scorecard*earnings) + SAT_AVG + monthorweek,data = clean_df)
+mod_2 <- feols(index ~ post_scorecard + high_earner + I(post_scorecard*high_earner) + SAT_AVG + monthorweek,data = clean_df)
 etable(mod_2)
 
 ```
@@ -234,15 +257,24 @@ wald(mod_2, 'SAT_AVG')
 
 ```{r}
 
-mod_3 <- feols(index ~ post_scorecard + earnings + I(post_scorecard*earnings) + monthorweek,data = clean_df)
+mod_3 <- feols(index ~ post_scorecard + high_earner + I(post_scorecard*high_earner) + monthorweek,data = clean_df)
 etable(mod_3)
 
 ```
 
 ***Comment***
 
-  + We have our model!
+  + We have our initial model!
 
+## Models with Three income groups instead of the binary - the middle set will be held out as the reference set
+## Model 4
+
+```{r}
+
+mod_4 <- feols(index ~ post_scorecard + low_income + high_income + I(post_scorecard*high_income) + monthorweek,data = clean_df)
+etable(mod_4)
+
+```
 
 # Summary of Findings
 
