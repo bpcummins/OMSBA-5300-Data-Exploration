@@ -74,4 +74,4 @@ quantile(clean_df$earnings, probs = c(0,0.25,0.5,0.75,1))
 
 clean_df$low_income <- ifelse(clean_df$earnings < 36400, 1, 0)
 clean_df$mid_income <- ifelse(clean_df$earnings >= 36400 & clean_df$earnings <= 49100, 1, 0)
-clean_df$high_income <- ifelse(clean_df$earnings > 166200, 1, 0)
+clean_df$high_income <- ifelse(clean_df$earnings > 49100, 1, 0)
