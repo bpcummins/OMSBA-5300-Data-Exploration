@@ -66,5 +66,12 @@ clean_df$ACTCMMID <- as.numeric(clean_df$ACTCMMID)
 clean_df$SAT_AVG <- as.numeric(clean_df$SAT_AVG)
 
 
+#lets do three income groups: low mid and high
+# low is bottom quartile, high is upper, mid is IQR
+quantile(clean_df$earnings, probs = c(0,0.25,0.5,0.75,1))
+#     0%    25%    50%    75%   100% 
+#  16700  36400  41700  49100 166200 
 
-
+clean_df$low_income <- ifelse(clean_df$earnings < 36400, 1, 0)
+clean_df$mid_income <- ifelse(clean_df$earnings >= 36400 & clean_df$earnings <= 49100, 1, 0)
+clean_df$high_income <- ifelse(clean_df$earnings > 166200, 1, 0)
