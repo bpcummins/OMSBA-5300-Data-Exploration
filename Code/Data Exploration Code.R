@@ -83,4 +83,4 @@ clean_df <-  clean_df %>%
                   MENONLY, WOMENONLY, ACTCMMID, SAT_AVG, low_income, mid_income, high_income))
 
 #saving out to be accessed in TA and write up
-write.csv(clean_df, 'Data/clean_trends.csv',row.names=FALSE)
+write.csv(clean_df, 'Processed Data/clean_trends.csv',row.names=FALSE)
