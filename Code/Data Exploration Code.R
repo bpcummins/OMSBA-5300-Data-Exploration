@@ -75,3 +75,12 @@ quantile(clean_df$earnings, probs = c(0,0.25,0.5,0.75,1))
 clean_df$low_income <- ifelse(clean_df$earnings < 36400, 1, 0)
 clean_df$mid_income <- ifelse(clean_df$earnings >= 36400 & clean_df$earnings <= 49100, 1, 0)
 clean_df$high_income <- ifelse(clean_df$earnings > 49100, 1, 0)
+
+
+#only keeping columns I used in the technical appendix to make it lighter 
+clean_df <-  clean_df %>% 
+  subset(select = c(index, earnings, post_scorecard, high_earner, PBI, HSI, 
+                  MENONLY, WOMENONLY, ACTCMMID, SAT_AVG, low_income, mid_income, high_income))
+
+#saving out to be accessed in TA and write up
+write.csv(clean_df, 'Data/clean_trends.csv',row.names=FALSE)
