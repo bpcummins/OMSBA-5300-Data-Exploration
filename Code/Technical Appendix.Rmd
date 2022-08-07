@@ -165,12 +165,12 @@ clean_df %>%
 
 
 # Detailed EDA - questions raised in Base EDA
-## Index and earnings
+## Index and high_earner
 
 
 ```{r message=FALSE, warning=FALSE}
 
-ggplot(clean_df, aes(x = earnings, y = index)) + geom_point() 
+ggplot(clean_df, aes(x = high_earner, y = index)) + geom_point() 
 
 
 ```
@@ -276,9 +276,61 @@ etable(mod_4)
 
 ```
 
+## This time the low set will be held out as the reference set
+## Model 4
+
+```{r}
+
+mod_5 <- feols(index ~ post_scorecard + mid_income + high_income + I(post_scorecard*high_income) + monthorweek,
+               data = clean_df)
+etable(mod_5)
+
+```
+
+```{r}
+etable(mod_4, mod_5)
+
+```
+
+```{r}
+wald(mod_4, 'low_income')
+```
+
+```{r}
+wald(mod_5, 'mid_income')
+```
+
+## This time we will just include that upper quartile as high earner and no other income groups
+## Model 6
+
+```{r}
+
+mod_6 <- feols(index ~ post_scorecard + high_income + I(post_scorecard*high_income) + monthorweek,
+               data = clean_df)
+etable(mod_6)
+
+```
+
+## okay what about mod_6 and SAT
+## Model 7
+
+```{r}
+
+mod_7 <- feols(index ~ post_scorecard + high_income + I(post_scorecard*high_income) + SAT_AVG + monthorweek,
+               data = clean_df)
+etable(mod_7)
+
+```
+
+
+```{r}
+wald(mod_7, 'SAT_AVG')
+```
+
+
 # Summary of Findings
 
-  + asdfasdf
+  + Model 6 is where it's at!
   + asdfasdf 
 
 
