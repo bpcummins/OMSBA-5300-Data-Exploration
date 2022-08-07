@@ -1,0 +1,99 @@
+---
+title: "Data Exploration Summary of Findings"
+author: "Brooke Cummins"
+date: "`r Sys.Date()`"
+output: html_document
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
+```
+
+
+Load in packages.
+```{r Packages, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(fixest)
+library(purrr)
+library(vtable)
+library(estimatr)
+library(lubridate)
+library(Ecdat)
+library(purrr)
+library(corrplot)
+library(gridExtra)
+library(janitor)
+library(knitr)
+library(GGally)
+library(scales)
+library(patchwork)
+library(DataExplorer)
+```
+
+## The Research Question:
+Among colleges that predominantly grant bachelor’s degrees, did the release of the Scorecard shift student interest to high-earnings colleges relative to low-earnings ones (as proxied by Google searches for keywords associated with those colleges)?
+
+## The Data: 
+### Data Overview
+```{r}
+clean_df <- read_csv('Processed Data/clean_trends.csv')
+```
+
+The Google Trends data consisted of 16 .csv files that I merged into one dataset by stacking all the Google Trends data from those files into one dataset.  Next I standardized the index variable used in the analysis by grouping the data by school and then normally distributing the index by subtracting the mean of each index from the index itself, followed by dividing by the standard deviation of the index. I then merged the scorecard data and school ID data using inner joins. To clean this data for analysis I removed duplicate school entries and filtered out any schools that do not predominately award bachelor's degrees. There were also a number of dummy variables I created showing if the scorecard had been released, if earnings were above the median, in the bottom quartile, in the IQR, and in the upper quartile.
+
+
+## Models:
+# About the Models
+In my analysis I created 8 models. I started with a basic model and increasingly added complexity or looked at different earnings flags. Lastly, I added a fixed effect which is the model I ultimately chose.  Let me walk you through a few of the models I looked at
+
+## Model 1 - Basic 
+I first ran a basic regression to see the effects that scorecard existence, high_earner (above the median), SAT-AVG score, and the date feature have on the index.
+```{r}
+mod_1 <- feols(index ~ post_scorecard + high_earner + SAT_AVG + monthorweek,data = clean_df)
+etable(mod_1)
+resid_mod_1 <- resid(mod_1)
+plot(fitted(mod_1), resid_mod_1)
+wald(mod_1, 'SAT_AVG')
+
+```
+
+Knowing this is a base model it was about finding an inital read to help guide the rest of my models. The fitted vs. residuals plot is concerning but as I knew I'd be further fleshing this model out with interactions and fixed effects, I wasn't too worried. The Wald test showed that SAT_AVG doesn't need to be included in the model going forward. As this model was not selected I will not interpret it
+
+## Model 2 - Interaction 
+Adding in the interaction of scorecard existence and high income, while still controlling for month. 
+```{r}
+mod_2 <- feols(index ~ post_scorecard + high_earner + I(post_scorecard*high_earner) + monthorweek,data = clean_df)
+etable(mod_2)
+resid_mod_2 <- resid(mod_2)
+plot(fitted(mod_2), resid_mod_2)
+```
+
+I liked this model but I wasn't set on just having high_earner be above the median, it didn't feel like it truly captured what being a high earner would look and feel like and certainly wouldn't be what I was considering as high earning when I was looking at colleges.  This type of high_earner could just be the difference between naturally higher earning majors and their relative percentages at various colleges
+
+##  Model 3 - New Income Variable
+My new high_income variable is the top quartile of earners. I personally believe this is closer to what people are considering when they consider what a high income would be. Based on the data the cutoff for high earning is $49,100
+```{r}
+mod_3 <- feols(index ~ post_scorecard + high_income + I(post_scorecard*high_income) + monthorweek, data = clean_df)
+etable(mod_3)
+resid_mod_3 <- resid(mod_3)
+plot(fitted(mod_3), resid_mod_3)
+```
+
+While I found this model to be really nice, I wasn't set on it. I wanted to consider one more variable. I believed that I was missing a fixed effect variable for the school. This will actually let me control for region a bit which I found to be helpful as there wasn't a great variable to use in the dataset for region.  Different areas have different cost of livings and people tend not to move too far from where they went to college.  Someone in San Francisco who went to University of San Francisco should make more than someone who lives in Kansas and went to Kansas University.
+
+##  Model 4 - Fixed Effect of School
+```{r}
+mod_4 <- feols(index ~ post_scorecard + I(post_scorecard*high_income) + monthorweek | schname, data = clean_df)
+etable(mod_4)
+resid_mod_4 <- resid(mod_4)
+plot(fitted(mod_4), resid_mod_4)
+```
+
+The difference in variation in our fitted vs. residuals plot compared to models 1-3 solidified my idea of the important of controlling for school as a potential proxy for region and regional differences in income. However, due to colinearity high_income has been removed but our interaction remains. This the ultimately the model I selected and I will continue to discuss and interpret it in the conclusion.
+
+# Conclusion
+The model 4 is our final model. This model added in the fixed effect of School Name, which I filtered to not include duplicate schools, in order to control for variables that were not in the dataset such as region and the differences in cost of living across the country. The addition of the fixed effect added additional variation to the fitted vs. residuals plot compared to the same model without the fixed effect. This model, like Models two and three, included an interaction between high_income, defined as income in the upper quartile of all incomes in the dataset) and the flag for if the scorecard existed.  The last variable in the model is the date as college interest changes considerably throughout the year due to application deadlines. 
+
+This model shows that when the scorecard is present, low income school have an average index of 0.0847 higher than high income schools controlling for the date and the school.  This finding is statistically significant at the highest level. 
+
+This finding is not entirely surprising to me as while I was personally unaware of this scorecard when looking at colleges, I certainly would have considered it.  College is very expensive and often puts young adults in significant amounts of debt they pay off for years. Making sure that there would be a significant return on that investment is important and ensures a brighter financial future, which is one of the main reasons most students are there.

@@ -30,7 +30,7 @@ library(DataExplorer)
 ```
 
 ```{r}
-source("../Code/Data Exploration Code.R")
+clean_df <- read_csv('Processed Data/clean_trends.csv')
 ```
 
 ```{r}
@@ -41,10 +41,16 @@ sumtable(clean_df)
 
 ***Comments***
 
-+ There are a lot of variables in this data set so I'll only go over the ones of interest I'll be focusing on in this analysis
++ I have only kept the variables of interest I'll be focusing on in this analysis
 
-    - asasdfasdfa
-    - asasdfasdfa
+    - The variables with the most spread are understandible earnings and ACT/SAT scores as everything else is a binary
+    - I kept a fair amount of binary indicators just to see if they'd be useful such as predominant race of the college or if it is gender restricted
+    - Lastly I created four earnings flags:
+      + high_earner is above the median
+      + low_income is bottom quartile
+      + mid_income is the IQR
+      + high_income is the upper quartile
+      
 
 
 
@@ -75,8 +81,8 @@ hist4 <- ggplot(data = clean_df, mapping = aes(x = SAT_AVG)) +
 
 **Comments**
 
-  + asdfasdf
-  + asdfasdf 
+  + Index is normally distributed (as it should be!!! we made it that way)
+  + earnings and test scores both have left tails but honestly, I expected that. They're still mostly normally distributed
 
 ## Categorical Variables
 
@@ -132,8 +138,7 @@ bar9 <- ggplot(data = clean_df, mapping = aes(x = high_income)) +
 
 **Comments**
 
-  + asdfasdf
-  + asdfasdf 
+  + all of these are binary - you can see high earner being split (we used the median so it should be) as well as mid_income which has the IQR so it should be as well
 
 
 
@@ -159,8 +164,7 @@ clean_df %>%
 
 **Comments**
 
-  + asdfasdf
-  + asdfasdf 
+  + based on the correlation and the ggpairs I am mostly interested in income variables and test scores
 
 
 
@@ -178,7 +182,7 @@ ggplot(clean_df, aes(x = high_earner, y = index)) + geom_point()
 
 **Comments**
 
-  + Hard to not immediately point out the shape of this beauty...
+  + Hard to not immediately point out the shape of this beauty... hard to see things here but wanted to take a peek just in case it was super obvious that the two had different distributions of the index
 
 
 ## Index values before and after scorecard
@@ -214,7 +218,7 @@ index_sat <- ggplot(clean_df, aes(x = SAT_AVG, y = index)) + geom_point()
 
 **Comments**
 
-  + asdfasdf asdf 
+  + SAT and earnings have similar effects, might only need one and we want earnings!
 
 
 # Modeling
@@ -343,16 +347,15 @@ etable(mod_8)
 # Summary of Findings
 
   + Model 8 is where it's at!
-  + asldkjf;alskdjf explain it
+  + This model shows that when the scorecard is present, low income school have an average index of 0.0847 higher than high income schools controlling for the date and the school.  This finding is statistically significant at the highest level. 
 
 
 
-# Create any visuals needed for write up
+# Resid Plot
 ```{r}
 
 resid <- resid(mod_8)
-plot(fitted(mod_8), resid)
-
+resit_plot <- plot(fitted(mod_8), resid)
 
 ``` 
 
