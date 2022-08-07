@@ -79,7 +79,7 @@ clean_df$high_income <- ifelse(clean_df$earnings > 49100, 1, 0)
 
 #only keeping columns I used in the technical appendix to make it lighter 
 clean_df <-  clean_df %>% 
-  subset(select = c(index, earnings, post_scorecard, high_earner, PBI, HSI, monthorweek,
+  subset(select = c(index, earnings, post_scorecard, high_earner, PBI, HSI, monthorweek, schname,
                   MENONLY, WOMENONLY, ACTCMMID, SAT_AVG, low_income, mid_income, high_income))
 
 #saving out to be accessed in TA and write up
