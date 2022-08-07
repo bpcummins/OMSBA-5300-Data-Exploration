@@ -327,16 +327,32 @@ etable(mod_7)
 wald(mod_7, 'SAT_AVG')
 ```
 
+## okay what about mod_6 and did controlling for school
+## Model 8
+
+
+```{r}
+
+mod_8 <- feols(index ~ post_scorecard + high_income + I(post_scorecard*high_income) + monthorweek | schname,
+               data = clean_df)
+etable(mod_8)
+
+```
+
 
 # Summary of Findings
 
-  + Model 6 is where it's at!
-  + asdfasdf 
+  + Model 8 is where it's at!
+  + asldkjf;alskdjf explain it
 
 
 
 # Create any visuals needed for write up
 ```{r}
+
+resid <- resid(mod_8)
+plot(fitted(mod_8), resid)
+
 
 ``` 
 
